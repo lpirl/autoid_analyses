@@ -9,8 +9,10 @@ class AbstractRFIDComponent(models.Model):
   class Meta:
     abstract = True
 
-  component_id = models.PositiveIntegerField()
-  name = models.CharField(max_length=255, blank=True)
+  component_id = models.CharField(max_length=64, primary_key=True,
+      help_text="The ID that is used in imported data.")
+  friendly_name = models.CharField(max_length=64, blank=True,
+      help_text="Might be used to ease readability for humans.")
   comments = models.TextField(blank=True)
 
 class Tag(AbstractRFIDComponent):
