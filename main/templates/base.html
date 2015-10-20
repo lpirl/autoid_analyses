@@ -1,0 +1,29 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  {% with "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5" as bootstrap_base_url %}
+    <link rel="stylesheet" href="{{ bootstrap_base_url }}/css/bootstrap.min.css">
+    <script src="{{ bootstrap_base_url }}/js/bootstrap.min.js"></script>
+  {% endwith %}
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}">
+  <title>AutoID Analysis</title>
+  {% block extra-header %}{% endblock extra-header %}
+</head>
+
+<body>
+
+<header>
+  {% include "menu.html" %}
+</header>
+
+{% block content %}{% endblock content %}
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg4136"
+   viewBox="0 0 512 512"
+   height="512"
+   width="512">
+  <defs
+     id="defs4138" />
+  <metadata
+     id="metadata4141">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-540.36219)"
+     id="layer1">
+    <path
+       id="path4708"
+       d="M 258.84227,634.49598 490.79694,943.76886"
+       style="fill:none;fill-rule:evenodd;stroke:#337ab7;stroke-width:30.92728806;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path4694"
+       d="m 258.84227,1021.0871 0,-386.59112 -231.954659,309.27288"
+       style="fill:none;fill-rule:evenodd;stroke:#337ab7;stroke-width:30.92728806;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path4704"
+       d="m -24,860.36219 144,-40"
+       style="fill:none;fill-rule:evenodd;stroke:#f0ad4e;stroke-width:32;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       id="path4710"
+       d="m 119.66947,820.05971 139.1728,46.39093 139.1728,-46.39093"
+       style="fill:none;fill-rule:evenodd;stroke:#f0ad4e;stroke-width:30.92728806;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#f0ad4e;stroke-width:32;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 399.42657,820.38449 137.002,-276.45087"
+       id="path4712" />
+  </g>
+</svg>
