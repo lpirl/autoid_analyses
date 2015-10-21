@@ -15,6 +15,10 @@ class AbstractRFIDComponent(models.Model):
       help_text="Might be used to ease readability for humans.")
   comments = models.TextField(blank=True)
 
+  def __unicode__(self):
+    name = self.friendly_name or self.__class__.__name__
+    return "%s (%s)" % (name, self.pk)
+
 class Tag(AbstractRFIDComponent):
   """
   Represents a physical RFID tag.
@@ -37,7 +41,15 @@ class AbstractScan(models.Model):
 
   timestamp = models.DateTimeField(db_index=True)
   tag = models.ForeignKey("Tag")
-  scanner = models.ForeignKey("Scanner", blank=True)
+  scanner = models.ForeignKey("Scanner", blank=True, null=True)
+
+
+  def __unicode__(self):
+    out = "%s at %s: %s" % (self.__class__.__name__, self.timestamp,
+                                    self.tag)
+    if self.scanner:
+      out += "by %s" % self.scanner
+    return out
 
 class RCCarScan(AbstractScan):
   pass
