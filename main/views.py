@@ -6,7 +6,7 @@ def index(request):
   return render(request, 'index.html', {})
 
 def popularity(request, cls, attr_name):
-  attr_cls = cls._meta.get_field(attr_name).related_model().__class__
+
   objects = cls.objects.select_related(attr_name).all()
   attr_objects = [getattr(o, attr_name) for o in objects]
 
@@ -16,6 +16,13 @@ def popularity(request, cls, attr_name):
     reverse=True
   )
 
+  attr_objects_count = float(len(attr_objects))
+  attr_objects_with_percentiles = sorted(
+    [(t[0], t[1]/attr_objects_count) for t in attr_objects_with_counts],
+    key=lambda t: t[1]
+  )
+
+  attr_cls = cls._meta.get_field(attr_name).related_model().__class__
   context = {
     "cls_name": cls._meta.verbose_name_plural,
     "attr_object_name": attr_cls._meta.verbose_name_plural,

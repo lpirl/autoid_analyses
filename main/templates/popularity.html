@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ attr_object_name }} popularity for {{ cls_name }}
+  popularity of
+  <code>{{ attr_object_name }}</code>
+  for
+  <code>{{ cls_name }}</code>
 {% endblock %}
 
 {% block content %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">relative counts</div>
+  <div class="panel-body">
+    <div id="relative_counts"></div>
+  </div>
+</div>
 
 <div class="panel panel-default">
   <div class="panel-heading">absolute counts</div>
@@ -15,15 +25,53 @@
 
 <script>
 $(function () {
-  $('#absolute_counts').highcharts({
-    chart: {
-      type: 'column'
-    },
+
+  var default_options = {
     title: {
       text: ''
     },
     subtitle: {
       text: ''
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    legend: {
+      enabled: false
+    },
+    series: [{
+      name: 'count',
+      colorByPoint: true,
+    }]
+  };
+
+  var data = [
+    {% for object, count in attr_objects_with_counts %}
+      ['{{ object }}', {{ count }}],
+    {%  endfor %}
+  ];
+
+  $('#relative_counts').highcharts($.extend(true, default_options, {
+    chart: {
+      type: 'pie'
+    },
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        }
+      }
+    },
+    series: [{
+      data: data
+    }]
+  }));
+
+
+  $('#absolute_counts').highcharts($.extend(true, default_options, {
+    chart: {
+      type: 'column'
     },
     xAxis: {
       type: 'category',
@@ -37,19 +85,8 @@ $(function () {
         text: 'count'
       }
     },
-    legend: {
-      enabled: false
-    },
-    tooltip: {
-      pointFormat: '<b>{point.y}</b>'
-    },
     series: [{
-      name: 'count',
-      data: [
-        {% for object, count in attr_objects_with_counts %}
-          ['{{ object }}', {{ count }}],
-        {% endfor %}
-      ],
+      data: data,
       dataLabels: {
         enabled: true,
         rotation: -90,
@@ -59,7 +96,7 @@ $(function () {
         y: 10, // from the top
       }
     }]
-  });
+  }));
 });
 </script>
 

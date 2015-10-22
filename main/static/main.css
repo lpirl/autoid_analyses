@@ -3,3 +3,8 @@ img#logo {
   height: 150%;
   margin: -2% 0 0 10px;
 }
+
+code {
+  color: inherit;
+  background-color: #F8F8F8;
+}
