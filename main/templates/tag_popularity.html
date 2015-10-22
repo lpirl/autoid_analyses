@@ -5,5 +5,57 @@ tag popularity for {{ name }}
 {% endblock %}
 
 {% block content %}
-content goes here
+
+<div id="tag_popularity" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+
+<script>
+$(function () {
+  $('#tag_popularity').highcharts({
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ''
+    },
+    subtitle: {
+      text: ''
+    },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: -45,
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'scan count'
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: '<b>{point.y} scans</b>'
+    },
+    series: [{
+      name: 'scan count',
+      data: [
+        {% for tag, scancount in tags_with_scancount %}
+          ['{{ tag }}', {{ scancount }}],
+        {% endfor %}
+      ],
+      dataLabels: {
+        enabled: true,
+        rotation: -90,
+        color: '#FFFFFF',
+        align: 'right',
+        format: '{point.y}',
+        y: 10, // from the top
+      }
+    }]
+  });
+});
+</script>
+
 {% endblock %}
