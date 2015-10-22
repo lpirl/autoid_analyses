@@ -1,5 +1,5 @@
 from uuid import uuid4
-from time import time
+from datetime import datetime, timedelta
 from random import choice, random
 
 from django.core.management.base import BaseCommand, CommandError
@@ -29,8 +29,8 @@ class Command(BaseCommand):
       raise CommandError('Number of scans to generate must be at least 1.')
     if options['tags'] < 1:
       raise CommandError('Number of tags to generate must be at least 1.')
-    if options['hours'] <= 0:
-      raise CommandError('Number of hours must be greater than 0.')
+    if options['hours'] == 0:
+      raise CommandError('Number of hours must be not 0.')
 
     tags = self.get_random_components(models.Tag, options['tags'])
 
@@ -40,13 +40,15 @@ class Command(BaseCommand):
     else:
       scanners = [None]
 
-    now = time()
+    now = datetime.now()
     seconds = options['hours'] * 60 * 60
+    self.stdout.write("timestamp,tag,scanner")
     for _ in range(options["scans"]):
+      time = now - timedelta(0, random() * seconds)
       tag = choice(tags)
       scanner = choice(scanners)
       self.stdout.write("%s,%s,%s" % (
-        now - random() * seconds,
+        time.strftime("%Y-%m-%d %H:%M:%S.%f"),
         tag.component_id,
         scanner.component_id if scanner else "",
       ))
