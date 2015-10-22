@@ -106,3 +106,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# This is crucial. It causes objects created for import previews
+# (that might not get actually imported) to be removed properly.
+IMPORT_EXPORT_USE_TRANSACTIONS = True
