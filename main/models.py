@@ -38,6 +38,7 @@ class AbstractScan(models.Model):
 
   class Meta:
     abstract = True
+    unique_together = ("timestamp", "tag")
 
   timestamp = models.DateTimeField(db_index=True)
   tag = models.ForeignKey("Tag")
