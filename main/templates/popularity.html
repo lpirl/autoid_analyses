@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
 
 {% block title %}
-tag popularity for {{ name }}
+{{ attr_object_name }} popularity for {{ cls_name }}
 {% endblock %}
 
 {% block content %}
 
-<div id="tag_popularity" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+<div class="panel panel-default">
+  <div class="panel-heading">absolute counts</div>
+  <div class="panel-body">
+    <div id="absolute_counts"></div>
+  </div>
+</div>
 
 <script>
 $(function () {
-  $('#tag_popularity').highcharts({
+  $('#absolute_counts').highcharts({
     chart: {
       type: 'column'
     },
@@ -29,20 +34,20 @@ $(function () {
     yAxis: {
       min: 0,
       title: {
-        text: 'scan count'
+        text: 'count'
       }
     },
     legend: {
       enabled: false
     },
     tooltip: {
-      pointFormat: '<b>{point.y} scans</b>'
+      pointFormat: '<b>{point.y}</b>'
     },
     series: [{
-      name: 'scan count',
+      name: 'count',
       data: [
-        {% for tag, scancount in tags_with_scancount %}
-          ['{{ tag }}', {{ scancount }}],
+        {% for object, count in attr_objects_with_counts %}
+          ['{{ object }}', {{ count }}],
         {% endfor %}
       ],
       dataLabels: {

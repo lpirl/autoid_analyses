@@ -22,8 +22,9 @@ def generic_analyses_patterns(scan_cls):
   cls_name = scan_cls.__name__
   slug = slugify(scan_cls._meta.verbose_name_plural)
   return url(r'^%s/' % slug, include([
-    url(r'tag-popularity/$', views.tag_popularity,
-        name="%s tag popularity" % cls_name, kwargs={"scan_cls": scan_cls}),
+    url(r'tag-popularity/$', views.popularity,
+        name="%s tag popularity" % cls_name,
+        kwargs={"cls": scan_cls, "attr_name": "tag"}),
   ]))
 
 urlpatterns = [
