@@ -7,7 +7,7 @@ def index(request):
 
 def popularity(request, cls, attr_name):
 
-  objects = cls.objects.select_related(attr_name).all()
+  objects = cls.objects.select_related(attr_name)
   attr_objects = [getattr(o, attr_name) for o in objects]
 
   attr_objects_with_counts = sorted(

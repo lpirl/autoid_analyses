@@ -20,15 +20,21 @@ from main import views, admin, models
 
 def generic_analyses_patterns(scan_cls):
   cls_name = scan_cls.__name__
+  attr_names = ('tag', 'scanner')
   slug = slugify(scan_cls._meta.verbose_name_plural)
   return url(r'^%s/' % slug, include([
-    url(r'tag-popularity/$', views.popularity,
-        name="%s tag popularity" % cls_name,
-        kwargs={"cls": scan_cls, "attr_name": "tag"}),
+    url(
+      r'%s-popularity/$' % attr_name,
+      views.popularity,
+      name="%s %s popularity" % (cls_name, attr_name),
+      kwargs={"cls": scan_cls, "attr_name": attr_name}
+    )
+    for attr_name in attr_names
   ]))
 
 urlpatterns = [
   url(r'^$', views.index, name='index'),
   url(r'^admin/', include(admin.site.urls)),
   generic_analyses_patterns(models.RCCarScan),
+  generic_analyses_patterns(models.ActivityAreaScan),
 ]

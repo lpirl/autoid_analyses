@@ -54,3 +54,6 @@ class AbstractScan(models.Model):
 
 class RCCarScan(AbstractScan):
   pass
+
+class ActivityAreaScan(AbstractScan):
+  pass
