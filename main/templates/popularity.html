@@ -9,19 +9,23 @@
 
 {% block content %}
 
-<div class="panel panel-default">
-  <div class="panel-heading">relative counts</div>
-  <div class="panel-body">
-    <div id="relative_counts"></div>
+{% if attr_objects_with_counts %}
+  <div class="panel panel-default">
+    <div class="panel-heading">relative counts</div>
+    <div class="panel-body">
+      <div id="relative_counts"></div>
+    </div>
   </div>
-</div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">absolute counts</div>
-  <div class="panel-body">
-    <div id="absolute_counts"></div>
+  <div class="panel panel-default">
+    <div class="panel-heading">absolute counts</div>
+    <div class="panel-body">
+      <div id="absolute_counts"></div>
+    </div>
   </div>
-</div>
+{% else %}
+  <div class="alert alert-info" role="alert">no data available</div>
+{% endif %}
 
 <script>
 $(function () {
@@ -32,9 +36,6 @@ $(function () {
     },
     subtitle: {
       text: ''
-    },
-    tooltip: {
-      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
     },
     legend: {
       enabled: false
@@ -54,6 +55,9 @@ $(function () {
   $('#relative_counts').highcharts($.extend(true, default_options, {
     chart: {
       type: 'pie'
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
     },
     plotOptions: {
       pie: {
@@ -78,6 +82,9 @@ $(function () {
       labels: {
         rotation: -45,
       }
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.y}</b>'
     },
     yAxis: {
       min: 0,
