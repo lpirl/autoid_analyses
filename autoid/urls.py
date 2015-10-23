@@ -37,4 +37,5 @@ urlpatterns = [
   url(r'^admin/', include(admin.site.urls)),
   generic_analyses_patterns(models.RCCarScan),
   generic_analyses_patterns(models.ActivityAreaScan),
+  generic_analyses_patterns(models.VideoScan),
 ]

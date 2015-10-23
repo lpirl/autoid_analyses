@@ -60,3 +60,4 @@ register_scan_kwargs = {
 }
 register_with_import_export(models.RCCarScan, **register_scan_kwargs)
 register_with_import_export(models.ActivityAreaScan, **register_scan_kwargs)
+register_with_import_export(models.VideoScan, **register_scan_kwargs)

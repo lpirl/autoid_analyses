@@ -49,11 +49,14 @@ class AbstractScan(models.Model):
     out = "%s at %s: %s" % (self.__class__.__name__, self.timestamp,
                                     self.tag)
     if self.scanner:
-      out += "by %s" % self.scanner
+      out += " by %s" % self.scanner
     return out
 
 class RCCarScan(AbstractScan):
   pass
 
 class ActivityAreaScan(AbstractScan):
+  pass
+
+class VideoScan(AbstractScan):
   pass
