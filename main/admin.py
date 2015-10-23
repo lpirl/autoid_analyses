@@ -32,18 +32,19 @@ def register_with_import_export(model_cls, exclude_model_attrs=tuple(),
       objects created herein are not actually kept when called for an
       import preview.
       """
-      for field_name in self.get_import_id_fields():
-
-        # app import_export does not work without this assertion,
-        # so we can assert it too:
-        assert field_name in dataset.headers
-
+      for field_name in dataset.headers:
         field = model_cls._meta.get_field(field_name)
         if type(field) is not ForeignKey:
           continue
         related_model_cls = field.related_model().__class__
-        for related_pk in dataset[field_name]:
-          related_model_cls.objects.get_or_create(pk=related_pk)
+        required_pks = set(dataset[field_name])
+        existing_pks = set(
+          related_model_cls.objects.all().values_list('pk', flat=True)
+        )
+        missing_objects = [
+          related_model_cls(pk=pk) for pk in required_pks - existing_pks
+        ]
+        related_model_cls.objects.bulk_create(missing_objects)
 
   class Admin(ImportExportModelAdmin):
     resource_class = Resource
@@ -58,3 +59,4 @@ register_scan_kwargs = {
   "id_fields": ("timestamp","tag"),
 }
 register_with_import_export(models.RCCarScan, **register_scan_kwargs)
+register_with_import_export(models.ActivityAreaScan, **register_scan_kwargs)
