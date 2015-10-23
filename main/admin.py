@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.db.models import ForeignKey
+from django.db.models import ForeignKey, DateTimeField
+from django import forms
 
 from import_export.admin import ImportExportModelAdmin
 from import_export.resources import ModelResource
@@ -48,6 +49,13 @@ def register_with_import_export(model_cls, exclude_model_attrs=tuple(),
 
   class Admin(ImportExportModelAdmin):
     resource_class = Resource
+    formfield_overrides = {
+      DateTimeField: {
+        'widget': forms.SplitDateTimeWidget(
+          time_format='%H:%M:%S.%f'
+        )
+      },
+    }
 
   site.register(model_cls, Admin)
 
