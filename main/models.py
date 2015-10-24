@@ -1,4 +1,14 @@
+# encoding: utf8
+
+from itertools import product
+
 from django.db import models
+
+from main.utils import (getattrs, values_to_hierarchical_dict,
+                        HierarchicalDict)
+
+# todo: model "Import" to log what has been imported by who etc.
+#       (mainly for easy deletion)
 
 class AbstractRFIDComponent(models.Model):
   """
@@ -44,12 +54,82 @@ class AbstractScan(models.Model):
   tag = models.ForeignKey("Tag")
   scanner = models.ForeignKey("Scanner", blank=True, null=True)
 
-
   def __unicode__(self):
     out = "%s at %s: %s" % (self.__class__.__name__, self.timestamp,
                                     self.tag)
     if self.scanner:
       out += " by %s" % self.scanner
+    return out
+
+  @classmethod
+  def get_related_attrs_popularity(cls, attr_names, sorted=True):
+    """
+    Calculates the total count and the percentile for a combination
+    of related attributes (``attr_names``).
+
+    Returns an ``len(attr_names)+1``-dimensional dict, one dimension
+    per attribute name. Each leaf containins a key called ``count`` and
+    a key called ``precentile``, representing the 'popularity' of the
+    particular combination of ``attr_names``.
+
+    Example:
+
+      {
+        <Tag: thriller>: {
+          <Author: Stephen King>: {
+            "count": 120,
+            "percentile": 42.23,
+          },
+          …
+        },
+        …
+      },
+
+    """
+    objects = cls.objects.select_related(*attr_names)
+
+    # get a list (of dicts) with all object combinations and their counts
+    attr_combinations_values = objects.values(
+      *attr_names
+    ).annotate(
+      count=models.Count("pk")
+    ).order_by(
+    )
+
+    # a list of object lists, needed to determine possible object
+    # combinations
+    attrs_objects = [
+      set(getattrs(objects, attr_name)) for attr_name in attr_names
+    ]
+
+    # needed to lookup counts for certain object combinations
+    counts_by_pk = values_to_hierarchical_dict(
+      attr_combinations_values,
+      attr_names
+    )
+
+    # needed to calculate percentiles (that's why it's already float)
+    objects_count = float(len(objects))
+
+    # if object combination does not exist, this information is provided:
+    default_leaf = {"count": 0, "percentile": 0}
+
+    # assemble a complete hierarchical dictionary of possible
+    # combinations of attributes, including their count and percentile
+    out = HierarchicalDict()
+    for combination in product(*attrs_objects):
+
+      count_dict = counts_by_pk.get_by_path(
+        (getattr(o, "pk", None) for o in combination),
+        None
+      )
+
+      if count_dict:
+        count_dict["percentile"] = count_dict["count"] / objects_count
+        out.set_by_path(combination, count_dict)
+      else:
+        out.set_by_path(combination, default_leaf)
+
     return out
 
 class RCCarScan(AbstractScan):

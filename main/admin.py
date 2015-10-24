@@ -47,6 +47,8 @@ def register_with_import_export(model_cls, exclude_model_attrs=tuple(),
         ]
         related_model_cls.objects.bulk_create(missing_objects)
 
+    # todo: skip admin log
+
   class Admin(ImportExportModelAdmin):
     resource_class = Resource
     formfield_overrides = {

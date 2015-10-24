@@ -9,50 +9,33 @@
 
 {% block content %}
 
-{% if attr_objects_with_counts %}
+{% if not attr_objects_with_counts %}
+  <div class="alert alert-info" role="alert">no data available</div>
+{% else %}
   <div class="panel panel-default">
     <div class="panel-heading">relative counts</div>
     <div class="panel-body">
-      <div id="relative_counts"></div>
+      <div class="attr_popularity_relative"></div>
     </div>
   </div>
 
   <div class="panel panel-default">
     <div class="panel-heading">absolute counts</div>
     <div class="panel-body">
-      <div id="absolute_counts"></div>
+      <div class="attr_popularity_absolute"></div>
     </div>
   </div>
-{% else %}
-  <div class="alert alert-info" role="alert">no data available</div>
 {% endif %}
 
 <script>
 $(function () {
-
-  var default_options = {
-    title: {
-      text: ''
-    },
-    subtitle: {
-      text: ''
-    },
-    legend: {
-      enabled: false
-    },
-    series: [{
-      name: 'count',
-      colorByPoint: true,
-    }]
-  };
-
   var data = [
     {% for object, count in attr_objects_with_counts %}
       ['{{ object }}', {{ count }}],
     {%  endfor %}
   ];
 
-  $('#relative_counts').highcharts($.extend(true, default_options, {
+  $('.attr_popularity_relative').highcharts($.extend(true, default_options, {
     chart: {
       type: 'pie'
     },
@@ -73,7 +56,7 @@ $(function () {
   }));
 
 
-  $('#absolute_counts').highcharts($.extend(true, default_options, {
+  $('.attr_popularity_absolute').highcharts($.extend(true, default_options, {
     chart: {
       type: 'column'
     },

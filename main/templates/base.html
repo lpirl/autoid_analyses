@@ -10,7 +10,7 @@
   {% with "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5" as bootstrap_base_url %}
     <link rel="stylesheet"
       href="{{ bootstrap_base_url }}/css/bootstrap.min.css">
-    <script defer src="{{ bootstrap_base_url }}/js/bootstrap.min.js"></script>
+    <script src="{{ bootstrap_base_url }}/js/bootstrap.min.js"></script>
   {% endwith %}
   <!--[if lt IE 9]>
     <script defer
@@ -18,7 +18,8 @@
     <script defer
       src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js" />
   <![endif]-->
-  <script src="http://code.highcharts.com/highcharts.js" defer></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="{% static 'main.js' %}"></script>
   <link rel="stylesheet" href="{% static 'main.css' %}">
   <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}">
   <title>AutoID Analysis</title>

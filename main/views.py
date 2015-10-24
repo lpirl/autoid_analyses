@@ -1,14 +1,16 @@
 from django.shortcuts import render
 
-from main.models import RCCarScan
+from main.utils import getattrs
 
 def index(request):
   return render(request, 'index.html', {})
 
-def popularity(request, cls, attr_name):
+def related_attr_popularity(request, cls, attr_name):
 
   objects = cls.objects.select_related(attr_name)
-  attr_objects = [getattr(o, attr_name) for o in objects]
+  attr_objects = getattrs(objects, attr_name)
+
+  # todo: use get_related_attrs_popularity
 
   attr_objects_with_counts = sorted(
     [(o, attr_objects.count(o)) for o in set(attr_objects)],
@@ -28,4 +30,16 @@ def popularity(request, cls, attr_name):
     "attr_object_name": attr_cls._meta.verbose_name_plural,
     "attr_objects_with_counts": attr_objects_with_counts,
   }
-  return render(request, 'popularity.html', context)
+  return render(request, 'attr_popularity.html', context)
+
+def related_attrs_popularity(request, cls, attr_names):
+
+  assert len(attr_names) == 2, "View supports only 2 attribute names."
+
+  attrs_popularity = cls.get_related_attrs_popularity(attr_names)
+  context = {
+    "cls_name": cls._meta.verbose_name_plural,
+    "attr_names": attr_names,
+    "attrs_popularity": attrs_popularity,
+  }
+  return render(request, 'attrs_popularity.html', context)

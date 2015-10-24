@@ -18,7 +18,8 @@ class Command(BaseCommand):
         help="number of random scanners to generate (default 0)")
     parser.add_argument('--hours', type=int, default=1,
         help="number of hours to generate the random scans within (default 1)")
-
+    # todo: add different random distributions via
+    #   https://docs.python.org/dev/library/argparse.html#choices
   @staticmethod
   def get_random_components(component_cls, size):
     return [component_cls(pk=str(uuid4())) for _ in range(size)]
