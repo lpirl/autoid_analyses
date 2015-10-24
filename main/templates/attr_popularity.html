@@ -9,7 +9,7 @@
 
 {% block content %}
 
-{% if not attr_objects_with_counts %}
+{% if not attrs_popularity %}
   <div class="alert alert-info" role="alert">no data available</div>
 {% else %}
   <div class="panel panel-default">
@@ -30,8 +30,8 @@
 <script>
 $(function () {
   var data = [
-    {% for object, count in attr_objects_with_counts %}
-      ['{{ object }}', {{ count }}],
+    {% for object, data in attrs_popularity.iteritems %}
+      ['{{ object }}', {{ data.count }}],
     {%  endfor %}
   ];
 

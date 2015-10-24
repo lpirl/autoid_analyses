@@ -1,6 +1,6 @@
 var default_options = {
   chart: {
-    plotBorderWidth: 1
+    plotBorderWidth: 0,
   },
   title: {
     text: ''

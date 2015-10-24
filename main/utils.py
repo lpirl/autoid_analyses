@@ -53,6 +53,8 @@ def getattrs(objects, attr_name):
 
 def values_to_hierarchical_dict(dicts, attr_names):
   """
+  TODO: move to HierarchicalDictMixin
+
   Transforms a list of ``dicts`` (as returned by ``QuerySet.values()``)
   to a hierarchical dict, e.g. for easier lookup.
   The resulting hierarchy is determined by ``attr_names``: for every
