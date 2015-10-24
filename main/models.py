@@ -5,9 +5,9 @@ from itertools import product
 from django.db import models
 
 from main.utils import (getattrs, values_to_hierarchical_dict,
-                        HierarchicalDict)
+                        HierarchicalOrderedDict)
 
-# todo: model "Import" to log what has been imported by who etc.
+# TODO: model "Import" to log what has been imported by who etc.
 #       (mainly for easy deletion)
 
 class AbstractRFIDComponent(models.Model):
@@ -62,7 +62,7 @@ class AbstractScan(models.Model):
     return out
 
   @classmethod
-  def get_related_attrs_popularity(cls, attr_names, sorted=True):
+  def get_related_attrs_popularity(cls, attr_names, queryset=None):
     """
     Calculates the total count and the percentile for a combination
     of related attributes (``attr_names``).
@@ -86,7 +86,8 @@ class AbstractScan(models.Model):
       },
 
     """
-    objects = cls.objects.select_related(*attr_names)
+    objects = queryset or cls.objects
+    objects = objects.select_related(*attr_names)
 
     # get a list (of dicts) with all object combinations and their counts
     attr_combinations_values = objects.values(
@@ -116,7 +117,7 @@ class AbstractScan(models.Model):
 
     # assemble a complete hierarchical dictionary of possible
     # combinations of attributes, including their count and percentile
-    out = HierarchicalDict()
+    out = HierarchicalOrderedDict()
     for combination in product(*attrs_objects):
 
       count_dict = counts_by_pk.get_by_path(
