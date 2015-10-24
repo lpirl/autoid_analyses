@@ -1,4 +1,7 @@
 var default_options = {
+  chart: {
+    plotBorderWidth: 1
+  },
   title: {
     text: ''
   },

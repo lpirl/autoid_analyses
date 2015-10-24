@@ -6,8 +6,8 @@
 
 {% block title %}
   popularity of
-  <code>{{ attr_object_name }}</code>
-  for
+  <code>{{ attr_names|join:"-" }}</code>
+  combinations for
   <code>{{ cls_name }}</code>
 {% endblock %}
 
@@ -30,9 +30,6 @@ $(function () {
 
     chart: {
       type: 'heatmap',
-      marginTop: 40,
-      marginBottom: 80,
-      plotBorderWidth: 1
     },
 
     xAxis: {
@@ -70,10 +67,10 @@ $(function () {
     tooltip: {
       formatter: function () {
         return  '<b>' +
-                  this.series.xAxis.categories[this.point.y] +
+                  this.series.xAxis.categories[this.point.x] +
                 '</b><br>' +
                 '<b>' +
-                  this.series.yAxis.categories[this.point.x] +
+                  this.series.yAxis.categories[this.point.y] +
                 '</b><br>';
       }
     },
