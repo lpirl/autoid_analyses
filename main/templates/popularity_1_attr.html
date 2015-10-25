@@ -2,7 +2,7 @@
 
 {% block title %}
   popularity of
-  <code>{{ attr_object_name }}</code>
+  <code>{{ attr_names|join:"-" }}</code>
   for
   <code>{{ cls_name }}</code>
 {% endblock %}

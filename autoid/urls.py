@@ -9,15 +9,15 @@ def generic_analyses_patterns(scan_cls):
   return url(r'^%s/' % slug, include([
     url(
       r'^tag-popularity/$',
-      views.related_attr_popularity,
+      views.related_attrs_popularity,
       name="%s tag popularity" % cls_name,
-      kwargs={"cls": scan_cls, "attr_name": "tag"}
+      kwargs={"cls": scan_cls, "attr_names": ("tag",)}
     ),
     url(
       r'^scanner-popularity/$',
-      views.related_attr_popularity,
+      views.related_attrs_popularity,
       name="%s scanner popularity" % cls_name,
-      kwargs={"cls": scan_cls, "attr_name": "scanner"}
+      kwargs={"cls": scan_cls, "attr_names": ("scanner",)}
     ),
     url(
       r'^tag-scanner-popularity/$',
