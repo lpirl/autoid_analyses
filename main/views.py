@@ -17,7 +17,6 @@ def related_attrs_popularity(request, cls, attr_names):
 
   attrs_count = len(attr_names)
   if attrs_count == 1:
-    # TODO: find a generic way to sort a hierarchal dict
     attrs_popularity = HierarchicalOrderedDict(
       sorted(
         attrs_popularity.iteritems(),
