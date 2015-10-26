@@ -1,6 +1,7 @@
 # encoding: utf8
 
 from itertools import product
+from datetime import timedelta
 
 from django.db import models
 
@@ -65,7 +66,8 @@ class AbstractScan(models.Model):
   def get_related_attrs_popularity(cls, attr_names, queryset=None):
     """
     Calculates the total count and the percentile for a combination
-    of related attributes (``attr_names``).
+    of related attributes (``attr_names``). Results might be optionally
+    limited using ``queryset``.
 
     Returns an ``len(attr_names)+1``-dimensional dict, one dimension
     per attribute name. Each leaf containins a key called ``count`` and
@@ -134,6 +136,55 @@ class AbstractScan(models.Model):
         out.set_by_path(combination, default_leaf)
 
     return out
+
+  @classmethod
+  def get_related_attr_scan_intervals(cls, attr_name, queryset=None):
+    """
+    Creates a series of time deltas between scans, grouped by objects
+    found under ``attr_name``. Results might be optionally limited using
+    ``queryset``.
+
+    Returns a dict with the related object as key and a list of tuples
+    as value. The tuples are filled with the timestamp and the
+    ``timedelta`` to the previous scan.
+
+    Example:
+
+      {
+        <Tag: thriller>: [
+          (datetime(…), timedelta(…)),
+          (datetime(…), timedelta(…)),
+        ],
+        …
+      }
+    """
+    TIMESTAMP_ATTR_NAME = "timestamp"
+
+    objects = queryset or cls.objects
+    objects = objects.only(
+      TIMESTAMP_ATTR_NAME, attr_name
+    ).select_related(
+      attr_name
+    ).order_by(
+      attr_name,
+      TIMESTAMP_ATTR_NAME
+    )
+
+    # initialize with empty lists (avoids cumbersome checks below)
+    all_series = {o: [] for o in set(getattrs(objects, attr_name))}
+
+    for scan in objects:
+      timestamp = scan.timestamp
+      attr_object = getattr(scan, attr_name)
+      inner_series = all_series.get(attr_object)
+      if inner_series:
+        last_timestamp = inner_series[-1][0]
+        delta = timestamp - last_timestamp
+      else:
+        delta = timedelta()
+      inner_series.append((timestamp, delta))
+
+    return all_series
 
 class RCCarScan(AbstractScan):
   pass
