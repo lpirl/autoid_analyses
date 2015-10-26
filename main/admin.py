@@ -25,6 +25,8 @@ def register_with_import_export(model_cls, exclude_model_attrs=tuple(),
       skip_unchanged = True
       report_skipped = True
 
+    # TODO: wire with "Import" model
+
     def before_import(self, dataset, dry_run, **kwargs):
       """
       Creates required but missing related objects.
