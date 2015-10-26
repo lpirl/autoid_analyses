@@ -31,7 +31,7 @@
 $(function () {
   var data = [
     {% for object, data in attrs_popularity.iteritems %}
-      ['{{ object }}', {{ data.count }}],
+      ['{{ object }}', {{ data.0 }}],
     {%  endfor %}
   ];
 

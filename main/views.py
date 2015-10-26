@@ -21,7 +21,7 @@ def related_attrs_popularity(request, cls, attr_names):
     attrs_popularity = HierarchicalOrderedDict(
       sorted(
         attrs_popularity.iteritems(),
-        key=lambda t: t[1]["count"],
+        key=lambda t: t[1][0],
         reverse=True
       )
     )
