@@ -86,3 +86,7 @@ def values_to_hierarchical_dict(dicts, attr_names):
     tmp_leaf.update(values)
 
   return out
+
+def get_verbose_name_plural_for_attr(cls, attr_name):
+  field = cls._meta.get_field(attr_name)
+  return field.related_model().__class__._meta.verbose_name_plural

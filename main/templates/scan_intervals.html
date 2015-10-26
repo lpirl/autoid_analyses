@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block extra-header %}
+{% endblock %}
+
+{% block title %}
+  scan intervals for
+  <code>{{ attr_name }}</code>
+  of
+  <code>{{ cls_name }}</code>
+{% endblock %}
+
+{% block content %}
+
+{% if not series %}
+  <div class="alert alert-info" role="alert">no data available</div>
+{% else %}
+  <div class="panel panel-default">
+    <div class="panel-heading">time since last scan</div>
+    <div class="panel-body">
+      <div class="values_over_time"></div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+$(function () {
+  $('.values_over_time').highcharts($.extend(true, default_options, {
+        chart: {
+            type: 'spline'
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%e. %b',
+                year: '%b'
+            },
+            title: {
+                text: 'Date'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'since last scan (s)'
+            },
+            min: 0
+        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: '{point.x:%e. %b %H:%M:%S}: {point.y:.2f} s'
+        },
+
+        plotOptions: {
+            spline: {
+                marker: {
+                    enabled: true
+                }
+            }
+        },
+
+        legend: {
+          enabled: true
+        },
+
+        series: [
+          {% for object, inner_series in series.iteritems %}
+            {
+              name: "{{ object }}",
+              colorByPoint: false,
+              data: [
+                {% for timestamp, delta in inner_series %}
+                  [
+                    {{ timestamp|date:'U' }} * 1000,
+                    {{ delta.total_seconds }}
+                  ],
+                {% endfor %}
+              ],
+            },
+          {% endfor %}
+        ]
+  }));
+});
+</script>
+
+{% endblock %}

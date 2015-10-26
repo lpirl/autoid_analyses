@@ -72,6 +72,8 @@ class AbstractScan(models.Model):
     a key called ``precentile``, representing the 'popularity' of the
     particular combination of ``attr_names``.
 
+    TODO: make most inner dict a tuple
+
     Example:
 
       {

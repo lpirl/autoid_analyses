@@ -13,6 +13,5 @@ var default_options = {
   },
   series: [{
     name: 'count',
-    colorByPoint: true,
   }]
 };
