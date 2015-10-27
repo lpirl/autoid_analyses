@@ -42,7 +42,7 @@ def get_RFID_component_list_filter(attr_name):
   # right admin sidebar just above the filter options.
   RFIDComponentListFilter.title = attr_name
 
-      # Parameter for the filter that will be used in the URL query.
+  # Parameter for the filter that will be used in the URL query.
   RFIDComponentListFilter.parameter_name = attr_name
 
   return RFIDComponentListFilter
