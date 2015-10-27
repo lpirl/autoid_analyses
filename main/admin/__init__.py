@@ -9,6 +9,7 @@ site.site_title = 'AutoID administration'
 site.index_title = 'Data administration'
 
 register_component_kwargs = {
+  "id_fields": ("component_id",),
   "search_fields": ("component_id", "friendly_name", "comments"),
   "list_display": ("component_id", "friendly_name", "comments"),
 }
