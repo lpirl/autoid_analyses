@@ -12,8 +12,8 @@ class Command(BaseCommand):
   @classmethod
   def get_random_generators(cls):
     return {
-      "uniform": cls._uniform_random_int,
-      "gauss": cls._gauss_like_random_int,
+      "uniform": cls._uniform_random,
+      "gauss": cls._gauss_like_random,
     }
 
   def add_arguments(self, parser):
@@ -41,27 +41,28 @@ class Command(BaseCommand):
         choices=random_generator_names,
         help="distribution to use to pick random hours (default: uniform)")
 
-  @staticmethod
-  def _round_to_int(x):
-    return int(round(x))
-
   @classmethod
-  def _gauss_like_random_int(cls, lowest, highest):
+  def _gauss_like_random(cls, lowest, highest):
     random_multiplier = gauss(3, 1)/6
     range_size = highest - lowest
     unlimited = lowest + range_size * random_multiplier
     limited = min(highest, max(lowest, unlimited))
-    return cls._round_to_int(limited)
+    return limited
 
   @classmethod
-  def _uniform_random_int(cls, lowest, highest):
-    return cls._round_to_int(uniform(lowest, highest))
+  def _uniform_random(cls, lowest, highest):
+    return uniform(lowest, highest)
 
   @classmethod
-  def _randint_with_dist(cls, lowest, highest, random_generator_name):
+  def _rand_with_dist(cls, lowest, highest, random_generator_name):
     random_generators = cls.get_random_generators()
     random_generator = random_generators[random_generator_name]
     return random_generator(lowest, highest)
+
+  @classmethod
+  def _randint_with_dist(cls, lowest, highest, random_generator_name):
+    random = cls._rand_with_dist(lowest, highest, random_generator_name)
+    return int(round(random))
 
   @classmethod
   def _choice_with_dist(cls, items, random_generator_name):
@@ -99,7 +100,7 @@ class Command(BaseCommand):
     seconds = options['hours'] * 60 * 60
     self.stdout.write("timestamp,tag,scanner")
     for _ in range(options["scans"]):
-      delta_secs = self._randint_with_dist(0, seconds, hours_distribution)
+      delta_secs = self._rand_with_dist(0, seconds, hours_distribution)
       time = now - timedelta(0, delta_secs)
       tag = self._choice_with_dist(tags, tags_distribution)
       scanner = self._choice_with_dist(scanners, scanners_distribution)
