@@ -1,0 +1,51 @@
+{{ datetime_range_form.media }}
+<div class="row">
+  <div class="col-md-6 col-offset-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">limit time range</div>
+      <div class="panel-body">
+        <form action="." method="get">
+
+          <div class="row">
+            <div class="col-md-6">
+              {% if datetime_range_form.from_datetime.errors %}
+                <div class="alert alert-danger" role="alert">
+                  {{ datetime_range_form.from_datetime.errors }}
+                </div>
+              {% endif %}
+              <div class="input-group">
+                {{ datetime_range_form.from_datetime.label_tag }}
+                {{ datetime_range_form.from_datetime }}
+                <span class="help-block">
+                  {{ datetime_range_form.from_datetime.help_text|safe }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              {% if datetime_range_form.to_datetime.errors %}
+                <div class="alert alert-danger" role="alert">
+                  {{ datetime_range_form.to_datetime.errors }}
+                </div>
+              {% endif %}
+              <div class="input-group">
+                {{ datetime_range_form.to_datetime.label_tag }}
+                {{ datetime_range_form.to_datetime }}
+                <span class="help-block">
+                  {{ datetime_range_form.to_datetime.help_text|safe }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+            <a class="btn btn-default" href="." role="button">reset</a>
+            <input class="btn btn-primary" type="submit" value="Go">
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

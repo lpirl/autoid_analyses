@@ -1,7 +1,6 @@
 # encoding: utf8
 from django.shortcuts import render
 from django.db.models import Max, Min
-from django.views.decorators.csrf import csrf_exempt
 
 from main.utils import (getattrs, HierarchicalOrderedDict,
                         get_verbose_name_plural_for_attr)
@@ -10,25 +9,30 @@ from forms import DateTimeRangeForm
 def index(request):
   return render(request, 'index.html', {})
 
-@csrf_exempt
-def related_attrs_popularity(request, cls, attr_names):
-
+def _get_form_and_queryset(request, cls):
   queryset = cls.objects
 
   initial_form_data = cls.objects.aggregate(
     from_datetime=Min('timestamp'), to_datetime=Max('timestamp')
   )
 
-  date_time_range_form = DateTimeRangeForm(
+  datetime_range_form = DateTimeRangeForm(
     request.GET or None,
-    initial = initial_form_data
+    initial=initial_form_data
   )
-  if date_time_range_form.is_valid():
-    from_datetime = date_time_range_form.cleaned_data["from_datetime"]
-    to_datetime = date_time_range_form.cleaned_data["to_datetime"]
+
+  if datetime_range_form.is_valid():
+    from_datetime = datetime_range_form.cleaned_data["from_datetime"]
+    to_datetime = datetime_range_form.cleaned_data["to_datetime"]
     queryset= queryset.filter(
       timestamp__range=(from_datetime, to_datetime)
     )
+
+  return (datetime_range_form, queryset)
+
+def related_attrs_popularity(request, cls, attr_names):
+
+  datetime_range_form, queryset = _get_form_and_queryset(request, cls)
 
   attr_verbose_names = [
     get_verbose_name_plural_for_attr(cls, n)
@@ -57,17 +61,20 @@ def related_attrs_popularity(request, cls, attr_names):
     "cls_name": cls._meta.verbose_name_plural,
     "attr_names": attr_verbose_names,
     "attrs_popularity": attrs_popularity,
-    "date_time_range_form": date_time_range_form,
+    "datetime_range_form": datetime_range_form,
   }
 
   return render(request, template, context)
 
 def related_attr_scan_intervals(request, cls, attr_name):
 
+  datetime_range_form, queryset = _get_form_and_queryset(request, cls)
+
   context = {
     "cls_name": cls._meta.verbose_name_plural,
     "attr_name": get_verbose_name_plural_for_attr(cls, attr_name),
-    "series": cls.get_related_attr_scan_intervals(attr_name),
+    "series": cls.get_related_attr_scan_intervals(attr_name, queryset=queryset),
+    "datetime_range_form": datetime_range_form,
   }
 
   return render(request, "scan_intervals.html", context)

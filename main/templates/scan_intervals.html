@@ -26,7 +26,7 @@
 $(function () {
   $('.values_over_time').highcharts($.extend(true, default_options, {
         chart: {
-            type: 'spline'
+            type: 'line'
         },
         xAxis: {
             type: 'datetime',
@@ -50,11 +50,11 @@ $(function () {
         },
 
         plotOptions: {
-            spline: {
+            line: {
                 marker: {
                     enabled: true
                 }
-            }
+            },
         },
 
         legend: {
@@ -74,11 +74,14 @@ $(function () {
                   ],
                 {% endfor %}
               ],
+              dashStyle: 'shortdot',
             },
           {% endfor %}
         ]
   }));
 });
 </script>
+
+{% include 'limitable_datetime_range_form.html' %}
 
 {% endblock %}

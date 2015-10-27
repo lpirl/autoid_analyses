@@ -84,7 +84,7 @@ $(function () {
             [
               {{ forloop.parentloop.counter0 }},
               {{ forloop.counter0 }},
-              {{ data[0] }},
+              {{ data.0 }},
             ],
           {% endfor %}
         {%  endfor %}
@@ -97,5 +97,7 @@ $(function () {
   }));
 });
 </script>
+
+{% include 'limitable_datetime_range_form.html' %}
 
 {% endblock %}
