@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.db.models import Max, Min
 
 from main.utils import (getattrs, HierarchicalOrderedDict,
-                        get_verbose_name_plural_for_attr)
+                        get_verbose_name_for_attr)
 from forms import DateTimeRangeForm
 
 def index(request):
@@ -35,7 +35,7 @@ def related_attrs_popularity(request, cls, attr_names):
   datetime_range_form, queryset = _get_form_and_queryset(request, cls)
 
   attr_verbose_names = [
-    get_verbose_name_plural_for_attr(cls, n)
+    get_verbose_name_for_attr(cls, n)
     for n in attr_names
   ]
 
@@ -72,7 +72,7 @@ def related_attr_scan_intervals(request, cls, attr_name):
 
   context = {
     "cls_name": cls._meta.verbose_name_plural,
-    "attr_name": get_verbose_name_plural_for_attr(cls, attr_name),
+    "attr_name": get_verbose_name_for_attr(cls, attr_name),
     "series": cls.get_related_attr_scan_intervals(attr_name, queryset=queryset),
     "datetime_range_form": datetime_range_form,
   }
