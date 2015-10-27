@@ -63,7 +63,7 @@ class AbstractScan(models.Model):
     return out
 
   @classmethod
-  def get_related_attrs_popularity(cls, attr_names, queryset=None):
+  def get_related_attrs_scan_count(cls, attr_names, queryset=None):
     """
     Calculates the total count and the percentile for a combination
     of related attributes (``attr_names``). Results might be optionally
@@ -71,8 +71,7 @@ class AbstractScan(models.Model):
 
     Returns an ``len(attr_names)``-dimensional dict, one dimension
     per attribute name. Each leaf is a tuple with the count and
-    the precentile, representing the 'popularity' of the particular
-    combination of attributes.
+    the precentile of the particular combination of attributes.
 
     Example:
 

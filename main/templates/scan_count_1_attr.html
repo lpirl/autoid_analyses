@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}
-  popularity of
+  scan count of
   <code>{{ attr_names|join:"-" }}</code>
   for
   <code>{{ cls_name }}</code>
@@ -13,20 +13,20 @@
 
 {% block content %}
 
-{% if not attrs_popularity %}
+{% if not attrs_scan_count %}
   <div class="alert alert-info" role="alert">no data available</div>
 {% else %}
   <div class="panel panel-default">
     <div class="panel-heading">relative counts</div>
     <div class="panel-body">
-      <div class="attr_popularity_relative"></div>
+      <div class="attr_scan_count_relative"></div>
     </div>
   </div>
 
   <div class="panel panel-default">
     <div class="panel-heading">absolute counts</div>
     <div class="panel-body">
-      <div class="attr_popularity_absolute"></div>
+      <div class="attr_scan_count_absolute"></div>
     </div>
   </div>
 {% endif %}
@@ -34,12 +34,12 @@
 <script>
 $(function () {
   var data = [
-    {% for object, data in attrs_popularity.iteritems %}
+    {% for object, data in attrs_scan_count.iteritems %}
       ['{{ object }}', {{ data.0 }}],
     {%  endfor %}
   ];
 
-  $('.attr_popularity_relative').highcharts($.extend(true, default_options, {
+  $('.attr_scan_count_relative').highcharts($.extend(true, default_options, {
     chart: {
       type: 'pie'
     },
@@ -60,7 +60,7 @@ $(function () {
   }));
 
 
-  $('.attr_popularity_absolute').highcharts($.extend(true, default_options, {
+  $('.attr_scan_count_absolute').highcharts($.extend(true, default_options, {
     chart: {
       type: 'column'
     },

@@ -8,25 +8,25 @@ def generic_analyses_patterns(scan_cls):
   slug = slugify(scan_cls._meta.verbose_name_plural)
   return url(r'^%s/' % slug, include([
     url(
-      r'^tag-popularity/$',
-      views.related_attrs_popularity,
-      name="%s tag popularity" % cls_name,
+      r'^tag-scan-count/$',
+      views.related_attrs_scan_count,
+      name="%s tag-scan-count" % cls_name,
       kwargs={"cls": scan_cls, "attr_names": ("tag",)}
     ),
     url(
-      r'^scanner-popularity/$',
-      views.related_attrs_popularity,
-      name="%s scanner popularity" % cls_name,
+      r'^scanner-scan-count/$',
+      views.related_attrs_scan_count,
+      name="%s scanner-scan-count" % cls_name,
       kwargs={"cls": scan_cls, "attr_names": ("scanner",)}
     ),
     url(
-      r'^tag-scanner-popularity/$',
-      views.related_attrs_popularity,
-      name="%s tag-scanner popularity" % cls_name,
+      r'^tag-scanner-scan-count/$',
+      views.related_attrs_scan_count,
+      name="%s tag-scanner-scan-count" % cls_name,
       kwargs={"cls": scan_cls, "attr_names": ("tag", "scanner")}
     ),
     url(
-      r'^scan-interval/$',
+      r'^scan-intervals/$',
       views.related_attr_scan_intervals,
       name="%s scan-intervals" % cls_name,
       kwargs={"cls": scan_cls, "attr_name": "tag"}

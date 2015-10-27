@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}
-  popularity of
+  scan count of
   <code>{{ attr_names|join:"-" }}</code>
   combinations for
   <code>{{ cls_name }}</code>
@@ -13,20 +13,20 @@
 
 {% block content %}
 
-{% if not attrs_popularity %}
+{% if not attrs_scan_count %}
   <div class="alert alert-info" role="alert">no data available</div>
 {% else %}
   <div class="panel panel-default">
     <div class="panel-heading">absolute counts</div>
     <div class="panel-body">
-      <div class="attrs_popularity_map"></div>
+      <div class="attrs_scan_count_map"></div>
     </div>
   </div>
 {% endif %}
 
 <script>
 $(function () {
-  $('.attrs_popularity_map').highcharts($.extend(true, default_options, {
+  $('.attrs_scan_count_map').highcharts($.extend(true, default_options, {
 
     chart: {
       type: 'heatmap',
@@ -34,7 +34,7 @@ $(function () {
 
     xAxis: {
       categories: [
-        {% for object in attrs_popularity.keys %}
+        {% for object in attrs_scan_count.keys %}
           '{{ object }}',
         {%  endfor %}
       ]
@@ -42,7 +42,7 @@ $(function () {
 
     yAxis: {
       categories: [
-        {% for object in attrs_popularity.values.0.keys %}
+        {% for object in attrs_scan_count.values.0.keys %}
           '{{ object }}',
         {%  endfor %}
       ],
@@ -79,7 +79,7 @@ $(function () {
       name: 'combination count',
       borderWidth: 1,
       data: [
-        {% for _, row in attrs_popularity.iteritems %}
+        {% for _, row in attrs_scan_count.iteritems %}
           {% for _, data in row.iteritems %}
             [
               {{ forloop.parentloop.counter0 }},
