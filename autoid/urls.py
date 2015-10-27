@@ -40,4 +40,5 @@ urlpatterns = [
   generic_analyses_patterns(models.RCCarScan),
   generic_analyses_patterns(models.ActivityAreaScan),
   generic_analyses_patterns(models.VideoScan),
+  generic_analyses_patterns(models.WorkstationLoginScan),
 ]

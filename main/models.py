@@ -9,7 +9,7 @@ from main.utils import (getattrs, values_to_hierarchical_dict,
                         HierarchicalOrderedDict)
 
 # TODO: model "Import" to log what has been imported by who etc.
-#       (mainly for easy deletion)
+#       (mainly for easy of deletion)
 
 class AbstractRFIDComponent(models.Model):
   """
@@ -49,7 +49,7 @@ class AbstractScan(models.Model):
 
   class Meta:
     abstract = True
-    unique_together = ("timestamp", "tag")
+    unique_together = ("timestamp", "tag", "scanner")
 
   timestamp = models.DateTimeField(db_index=True)
   tag = models.ForeignKey("Tag")
@@ -162,7 +162,6 @@ class AbstractScan(models.Model):
     ).select_related(
       attr_name
     ).order_by(
-      attr_name,
       TIMESTAMP_ATTR_NAME
     )
 
@@ -189,4 +188,7 @@ class ActivityAreaScan(AbstractScan):
   pass
 
 class VideoScan(AbstractScan):
+  pass
+
+class WorkstationLoginScan(AbstractScan):
   pass

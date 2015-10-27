@@ -114,6 +114,48 @@
                 tag-scanner popularity
               </a>
             </li>
+            <li>
+              <a href="{% url 'VideoScan scan-intervals' %}">
+                scan intervals
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false">
+              workstation logins
+              <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">Analysis A</a>
+            </li>
+            <li>
+              <a href="#">Analysis B</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="{% url 'WorkstationLoginScan tag popularity' %}">
+                tag popularity
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'WorkstationLoginScan scanner popularity' %}">
+                workstation popularity
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'WorkstationLoginScan tag-scanner popularity' %}">
+                tag-workstation popularity
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'WorkstationLoginScan scan-intervals' %}">
+                scan intervals
+              </a>
+            </li>
           </ul>
         </li>
 

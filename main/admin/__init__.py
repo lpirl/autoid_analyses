@@ -19,7 +19,7 @@ helpers.register_with_import_export(site, models.Scanner,
 
 register_scan_kwargs = {
   "exclude_model_attrs": ("id",),
-  "id_fields": ("timestamp", "tag"),
+  "id_fields": ("timestamp", "tag", "scanner"),
   "list_display": ("timestamp", "tag", "scanner"),
   "list_filter": (
     "timestamp",
@@ -32,4 +32,6 @@ helpers.register_with_import_export(site, models.RCCarScan,
 helpers.register_with_import_export(site, models.ActivityAreaScan,
                                     **register_scan_kwargs)
 helpers.register_with_import_export(site, models.VideoScan,
+                                    **register_scan_kwargs)
+helpers.register_with_import_export(site, models.WorkstationLoginScan,
                                     **register_scan_kwargs)
