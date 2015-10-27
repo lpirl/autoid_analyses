@@ -89,4 +89,4 @@ def values_to_hierarchical_dict(dicts, attr_names):
 
 def get_friendly_name_for_attr(cls, attr_name):
   field = cls._meta.get_field(attr_name)
-  return field.related_model().__class__._meta.verbose_name_plural
+  return field.related_model().__class__._meta.verbose_name

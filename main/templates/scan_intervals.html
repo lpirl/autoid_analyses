@@ -4,10 +4,9 @@
 {% endblock %}
 
 {% block title %}
-  scan intervals for
-  <code>{{ attr_name }}</code>
-  of
   <code>{{ cls_name }}</code>
+  per
+  <code>{{ attr_name }}</code>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +34,7 @@ $(function () {
                 year: '%b'
             },
             title: {
-                text: 'Date'
+                text: ''
             }
         },
         yAxis: {
