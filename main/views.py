@@ -82,7 +82,7 @@ def related_attr_scan_intervals(request, cls, attr_name):
 
   return render(request, "scan_intervals.html", context)
 
-def related_attrs_scan_count_per_weekday(request, cls):
+def scan_count_per_weekday(request, cls):
   datetime_range_form, queryset = _get_form_and_queryset(request, cls)
 
   WEEKDAYS = {
@@ -95,7 +95,7 @@ def related_attrs_scan_count_per_weekday(request, cls):
     7: "Sundays",
   }
 
-  counts_raw = cls.get_related_attr_scan_count_per_weekday(queryset=queryset)
+  counts_raw = cls.get_scan_count_per_weekday(queryset=queryset)
   counts = OrderedDict()
   for weekday_num, weekday_count in counts_raw.iteritems():
     weekday_name = WEEKDAYS[weekday_num]
