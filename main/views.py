@@ -1,6 +1,8 @@
 # encoding: utf8
+from collections import OrderedDict
+
 from django.shortcuts import render
-from django.db.models import Max, Min, Count
+from django.db.models import Max, Min
 
 from main.utils import (getattrs, HierarchicalOrderedDict,
                         get_friendly_name_for_attr,
@@ -81,38 +83,23 @@ def related_attr_scan_intervals(request, cls, attr_name):
   return render(request, "scan_intervals.html", context)
 
 def related_attrs_scan_count_per_weekday(request, cls):
-  # TODO: needs heavy refactoring
-
-  TIMESTAMP_ATTR_NAME = "timestamp"
-  WEEKDAY_ATTR_NAME = "weekday"
-
   datetime_range_form, queryset = _get_form_and_queryset(request, cls)
 
-  counts_values = queryset.extra(
-    select={WEEKDAY_ATTR_NAME: 'strftime("%%w", %s)' % TIMESTAMP_ATTR_NAME}
-  ).values(
-    WEEKDAY_ATTR_NAME
-  ).annotate(
-    count=Count("pk")
-  ).order_by(
-    WEEKDAY_ATTR_NAME
-  )
-
   WEEKDAYS = {
-    0: "Sundays",
     1: "Mondays",
     2: "Tuesdays",
     3: "Wednesdays",
     4: "Thursdays",
     5: "Fridays",
     6: "Saturdays",
+    7: "Sundays",
   }
 
-  counts_raw = values_to_hierarchical_dict(counts_values, (WEEKDAY_ATTR_NAME,))
-  counts = {}
-  for weekday_num, count_dict in counts_raw.iteritems():
-    weekday_name = WEEKDAYS[int(weekday_num)]
-    counts[weekday_name] = count_dict["count"]
+  counts_raw = cls.get_related_attr_scan_count_per_weekday(queryset=queryset)
+  counts = OrderedDict()
+  for weekday_num, weekday_count in counts_raw.iteritems():
+    weekday_name = WEEKDAYS[weekday_num]
+    counts[weekday_name] = weekday_count
 
   context = {
     "cls_name": cls._meta.verbose_name_plural,

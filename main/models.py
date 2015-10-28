@@ -65,11 +65,11 @@ class AbstractScan(models.Model):
   @classmethod
   def get_related_attrs_scan_count(cls, attr_names, queryset=None):
     """
-    Calculates the total count and the percentile for a combination
-    of related attributes (``attr_names``). Results might be optionally
-    limited using ``queryset``.
+    Calculates the total count for a combination of related attributes
+    (``attr_names``).
+    Results might be optionally limited using ``queryset``.
 
-    Returns an ``len(attr_names)``-dimensional dict, one dimension
+    Returns a ``len(attr_names)``-dimensional dict, one dimension
     per attribute name. Each leaf is a tuple with the count of the
     particular combination of attributes.
 
@@ -153,15 +153,14 @@ class AbstractScan(models.Model):
         …
       }
     """
-    TIMESTAMP_ATTR_NAME = "timestamp"
 
     objects = queryset or cls.objects
     objects = objects.only(
-      TIMESTAMP_ATTR_NAME, attr_name
+      "timestamp", attr_name
     ).select_related(
       attr_name
     ).order_by(
-      TIMESTAMP_ATTR_NAME
+      "timestamp"
     )
 
     # initialize with empty lists (avoids cumbersome checks below)
@@ -179,6 +178,37 @@ class AbstractScan(models.Model):
       inner_series.append((timestamp, delta))
 
     return all_series
+
+  @classmethod
+  def get_related_attr_scan_count_per_weekday(cls, queryset=None):
+    """
+    Calculates the total count per weekday for all scans.
+    Results might be optionally limited using ``queryset``.
+
+    Returns a dict, mapping the week day from 1 (Monday) through 7 (Sunday)
+    to their corresponding scan counts.
+
+    Example:
+
+      {
+        1: 2,
+        2: 43,
+        3: 12,
+        4: 121,
+        5: 48,
+        6: 78,
+        7: 33,
+      },
+    """
+    queryset = queryset or cls.objects
+
+    # I did not find a way to annotate and aggregate by week day using
+    #   the data of a DatetimeField (Django 1.9). So we do it in code:
+    counts = {n: 0 for n in range(1,8)}
+    for datetime in queryset.values_list("timestamp", flat=True):
+      counts[datetime.isoweekday()] += 1
+
+    return counts
 
 class RCCarScan(AbstractScan):
   pass
