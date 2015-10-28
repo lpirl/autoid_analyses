@@ -159,12 +159,11 @@ class AbstractScan(models.Model):
       "timestamp", attr_name
     ).select_related(
       attr_name
-    ).order_by(
-      "timestamp"
     )
 
     # initialize with empty lists (avoids cumbersome checks below)
-    all_series = {o: [] for o in set(getattrs(objects, attr_name))}
+    attr_objects = objects.only(attr_name).distinct()
+    all_series = {o: [] for o in getattrs(attr_objects, attr_name)}
 
     for scan in objects:
       timestamp = scan.timestamp
@@ -180,7 +179,7 @@ class AbstractScan(models.Model):
     return all_series
 
   @classmethod
-  def get_related_attr_scan_count_per_weekday(cls, queryset=None):
+  def get_scan_count_per_weekday(cls, queryset=None):
     """
     Calculates the total count per weekday for all scans.
     Results might be optionally limited using ``queryset``.
@@ -202,10 +201,12 @@ class AbstractScan(models.Model):
     """
     queryset = queryset or cls.objects
 
-    # I did not find a way to annotate and aggregate by week day using
-    #   the data of a DatetimeField (Django 1.9). So we do it in code:
+    # Could not find a way to annotate and aggregate by week day using
+    #   the data of a DatetimeField (Django 1.9) in SQL.
+    #   So we do it in code:
     counts = {n: 0 for n in range(1,8)}
     for datetime in queryset.values_list("timestamp", flat=True):
+      # TODO: make this is a function, so we can aggregate over whatever
       counts[datetime.isoweekday()] += 1
 
     return counts
