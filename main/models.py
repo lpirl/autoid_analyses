@@ -70,14 +70,14 @@ class AbstractScan(models.Model):
     limited using ``queryset``.
 
     Returns an ``len(attr_names)``-dimensional dict, one dimension
-    per attribute name. Each leaf is a tuple with the count and
-    the precentile of the particular combination of attributes.
+    per attribute name. Each leaf is a tuple with the count of the
+    particular combination of attributes.
 
     Example:
 
       {
         <Tag: thriller>: {
-          <Author: Stephen King>: (120, 42.23)
+          <Author: Stephen King>: 120
           },
           …
         },
@@ -112,7 +112,7 @@ class AbstractScan(models.Model):
     objects_count = float(len(objects))
 
     # if object combination does not exist, this information is provided:
-    default_leaf = (0,0)
+    default_leaf = 0
 
     # assemble a complete hierarchical dictionary of possible
     # combinations of attributes, including their count and percentile
@@ -126,9 +126,9 @@ class AbstractScan(models.Model):
 
       if count_dict:
         count = count_dict["count"]
-        out.set_by_path(combination, (count, count / objects_count))
       else:
-        out.set_by_path(combination, default_leaf)
+        count = default_leaf
+      out.set_by_path(combination, count)
 
     return out
 

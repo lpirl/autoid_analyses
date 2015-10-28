@@ -31,6 +31,12 @@ def generic_analyses_patterns(scan_cls):
       name="%s scan-intervals" % cls_name,
       kwargs={"cls": scan_cls, "attr_name": "tag"}
     ),
+    url(
+      r'^scan-count-per-weekday/$',
+      views.related_attrs_scan_count_per_weekday,
+      name="%s scan-count-per-weekday" % cls_name,
+      kwargs={"cls": scan_cls}
+    ),
   ]))
 
 urlpatterns = [

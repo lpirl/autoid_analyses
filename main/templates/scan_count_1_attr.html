@@ -34,7 +34,7 @@
 $(function () {
   var data = [
     {% for object, data in attrs_scan_count.iteritems %}
-      ['{{ object }}', {{ data.0 }}],
+      ['{{ object }}', {{ data }}],
     {%  endfor %}
   ];
 
