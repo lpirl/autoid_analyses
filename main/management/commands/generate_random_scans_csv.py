@@ -21,22 +21,22 @@ class Command(BaseCommand):
     random_generator_names = self.get_random_generators().keys()
 
     parser.add_argument('--scans', type=int, default=100,
-        help="number of random scans to generate  (default 100)")
+        help="number of random scans to generate  (default: 100)")
 
     parser.add_argument('--tags', type=int, default=1,
-        help="number of random tags to generate (default 1)")
+        help="number of random tags to generate (default: 1)")
     parser.add_argument('--tags-dist', default="uniform",
         choices=random_generator_names,
         help="distribution to use to pick random tags (default: uniform)")
 
     parser.add_argument('--scanners', type=int, default=0,
-        help="number of random scanners to generate (default 0)")
+        help="number of random scanners to generate (default: 0)")
     parser.add_argument('--scanners-dist', default="uniform",
         choices=random_generator_names,
         help="distribution to use to pick random scanners (default: uniform)")
 
     parser.add_argument('--hours', type=int, default=1,
-        help="number of hours to generate the random scans within (default 1)")
+        help="number of hours to generate the random scans within (default: 1)")
     parser.add_argument('--hours-dist', default="uniform",
         choices=random_generator_names,
         help="distribution to use to pick random hours (default: uniform)")
