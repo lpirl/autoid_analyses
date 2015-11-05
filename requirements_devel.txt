@@ -1,2 +1,1 @@
 -r requirements_common.txt
-django-debug-toolbar==1.4

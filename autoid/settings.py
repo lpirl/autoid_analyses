@@ -16,15 +16,10 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ON_HEROKU = 'DYNO' in os.environ
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True and not ON_HEROKU
+DEBUG = os.environ.get("DEBUG", True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if not ON_HEROKU and DEBUG:
+if not ON_HEROKU:
   # use a dummy:
   SECRET_KEY = 'x' * 64
 else:
