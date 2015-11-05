@@ -159,6 +159,8 @@ class AbstractScan(models.Model):
       "timestamp", attr_name
     ).select_related(
       attr_name
+    ).order_by(
+      "timestamp"
     )
 
     # initialize with empty lists (avoids cumbersome checks below)
