@@ -15,15 +15,16 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ON_HEROKU = 'DYNO' in os.environ
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True and not ON_HEROKU
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if DEBUG and "SECRET_KEY" not in os.environ:
+if not ON_HEROKU and DEBUG:
   # use a dummy:
   SECRET_KEY = 'x' * 64
 else:
@@ -33,7 +34,10 @@ else:
   assert len(SECRET_KEY) >= 64, ("environment variable SECRET_KEY " +
                                 "must be longer than 64 characters")
 
-ALLOWED_HOSTS = []
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -89,14 +93,16 @@ WSGI_APPLICATION = 'autoid.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if ON_HEROKU:
+  import dj_database_url
+  DATABASES['default'] =  dj_database_url.config()
+else:
+  DATABASES = {
+    'default': {
+      'ENGINE': 'django.db.backends.sqlite3',
+      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
   }
-}
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -111,11 +117,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+if ON_HEROKU:
+  STATICFILES_DIRS = (
+      os.path.join(BASE_DIR, 'static'),
+  )
 
 # This is crucial. It causes objects created for import previews
 # (that might not get actually imported) to be removed properly.
