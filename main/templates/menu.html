@@ -23,48 +23,15 @@
               <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a href="{% url 'RCCarScan tag-scan-count' %}">
-                counts per tag
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan scanner-scan-count' %}">
-                counts per scanner
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan tag-scanner-scan-count' %}">
-                counts per tag-scanner combination
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan scan-intervals' %}">
-                scan intervals
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan scan-count-per-hour-of-the-day' %}">
-                counts per hour of the day
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan scan-count-per-day-of-the-week' %}">
-                counts per day of the week
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'RCCarScan scan-count-per-month-of-the-year' %}">
-                counts per month of the year
-              </a>
-            </li>
+            {% with "RCCarScan" as cls %}
+              {% include "menu_items_generic_analyses.html" %}
+            {% endwith %}
             {% comment %}
-            <li role="separator" class="divider"></li>
-            <li>
-              <a href="…">…</a>
-            </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a href="…">example special analysis …</a>
+              </li>
             {% endcomment %}
-
           </ul>
         </li>
 
@@ -75,21 +42,9 @@
               <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a href="{% url 'ActivityAreaScan tag-scan-count' %}">
-                counts per tag
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'ActivityAreaScan scanner-scan-count' %}">
-                counts per scanner
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'ActivityAreaScan tag-scanner-scan-count' %}">
-                counts per tag-scanner combination
-              </a>
-            </li>
+            {% with "ActivityAreaScan" as cls %}
+              {% include "menu_items_generic_analyses.html" %}
+            {% endwith %}
           </ul>
         </li>
 
@@ -100,26 +55,9 @@
               <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a href="{% url 'VideoScan tag-scan-count' %}">
-                counts per tag
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'VideoScan scanner-scan-count' %}">
-                counts per scanner
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'VideoScan tag-scanner-scan-count' %}">
-                counts per tag-scanner combination
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'VideoScan scan-intervals' %}">
-                scan intervals
-              </a>
-            </li>
+            {% with "VideoScan" as cls %}
+              {% include "menu_items_generic_analyses.html" %}
+            {% endwith %}
           </ul>
         </li>
 
@@ -130,26 +68,9 @@
               <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a href="{% url 'WorkstationLoginScan tag-scan-count' %}">
-                counts per tag
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'WorkstationLoginScan scanner-scan-count' %}">
-                counts per scanner
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'WorkstationLoginScan tag-scanner-scan-count' %}">
-                counts per tag-scanner combination
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'WorkstationLoginScan scan-intervals' %}">
-                scan intervals of tags
-              </a>
-            </li>
+            {% with "WorkstationLoginScan" as cls %}
+              {% include "menu_items_generic_analyses.html" %}
+            {% endwith %}
           </ul>
         </li>
 
