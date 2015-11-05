@@ -1,4 +1,5 @@
 Django==1.8.5
+docutils==0.12
 django-import-export==0.2.8
 django-bootstrap3-datetimepicker==2.2.3
 django-debug-toolbar==1.4
