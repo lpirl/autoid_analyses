@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ON_HEROKU = 'DYNO' in os.environ
-DEBUG = os.environ.get("DEBUG", True)
+DEBUG = os.environ.get("DEBUG", "true").lower() in ("yes", "true", "1")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 if not ON_HEROKU:
