@@ -179,37 +179,36 @@ class AbstractScan(models.Model):
     return all_series
 
   @classmethod
-  def get_scan_count_per_weekday(cls, queryset=None):
+  def get_timestamp_aggregated_scan_counts(cls, aggregation_criterion_func,
+                                          queryset=None):
     """
-    Calculates the total count per weekday for all scans.
+    Calculates the total count per aggregate for all scans.
+    ``aggregation_criterion_func`` is invoked with a datetime object and
+    its return value is used to determine which aggregate count increment.
     Results might be optionally limited using ``queryset``.
 
-    Returns a dict, mapping the week day from 1 (Monday) through 7 (Sunday)
-    to their corresponding scan counts.
+    Returns a dict, mapping the aggregates (return values of
+    ``aggregation_criterion_func``) to their corresponding scan counts.
 
-    Example:
+    Example result, count per day of month::
 
       {
         1: 2,
         2: 43,
         3: 12,
-        4: 121,
-        5: 48,
-        6: 78,
-        7: 33,
+        …
+        29: 4,
+        30: 78,
+        31: 33,
       },
     """
     queryset = queryset or cls.objects
 
-    # Could not find a way to annotate and aggregate by week day using
-    #   the data of a DatetimeField (Django 1.9) in SQL.
-    #   So we do it in code:
-    counts = {n: 0 for n in range(1,8)}
-    for datetime in queryset.values_list("timestamp", flat=True):
-      # TODO: make this is a function, so we can aggregate over whatever
-      counts[datetime.isoweekday()] += 1
+    timestamps = queryset.values_list("timestamp", flat=True)
+    criteria = [aggregation_criterion_func(t) for t in timestamps]
+    count = criteria.count
 
-    return counts
+    return {k: count(k) for k in set(criteria)}
 
 class RCCarScan(AbstractScan):
   pass

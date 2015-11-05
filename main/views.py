@@ -1,12 +1,11 @@
 # encoding: utf8
 from collections import OrderedDict
+import calendar
 
 from django.shortcuts import render
 from django.db.models import Max, Min
 
-from main.utils import (getattrs, HierarchicalOrderedDict,
-                        get_friendly_name_for_attr,
-                        values_to_hierarchical_dict)
+from main.utils import get_friendly_name_for_attr
 from forms import DateTimeRangeForm
 
 def index(request):
@@ -47,7 +46,7 @@ def related_attrs_scan_count(request, cls, attr_names):
 
   attrs_count = len(attr_names)
   if attrs_count == 1:
-    attrs_scan_count = HierarchicalOrderedDict(
+    attrs_scan_count = OrderedDict(
       sorted(
         attrs_scan_count.iteritems(),
         key=lambda t: t[1],
@@ -82,28 +81,69 @@ def related_attr_scan_intervals(request, cls, attr_name):
 
   return render(request, "scan_intervals.html", context)
 
-def scan_count_per_weekday(request, cls):
+def day_of_the_week_scan_count(request, cls):
   datetime_range_form, queryset = _get_form_and_queryset(request, cls)
 
-  WEEKDAYS = {
-    1: "Mondays",
-    2: "Tuesdays",
-    3: "Wednesdays",
-    4: "Thursdays",
-    5: "Fridays",
-    6: "Saturdays",
-    7: "Sundays",
-  }
+  # ensure every day of the week is present and in correct order:
+  counts = OrderedDict((d, 0) for d in calendar.day_name)
 
-  counts_raw = cls.get_scan_count_per_weekday(queryset=queryset)
-  counts = OrderedDict()
-  for weekday_num, weekday_count in counts_raw.iteritems():
-    weekday_name = WEEKDAYS[weekday_num]
-    counts[weekday_name] = weekday_count
+  counts.update(
+    cls.get_timestamp_aggregated_scan_counts(
+      lambda dt: dt.strftime("%A"),
+      queryset
+    )
+  )
 
   context = {
     "cls_name": cls._meta.verbose_name_plural,
     "attr_names": ("weekday",),
+    "attrs_scan_count": counts,
+    "datetime_range_form": datetime_range_form,
+  }
+
+  return render(request, 'scan_count_1_attr.html', context)
+
+def hour_of_the_day_scan_count(request, cls):
+  datetime_range_form, queryset = _get_form_and_queryset(request, cls)
+
+  # ensure every hour of the day is present and in correct order:
+  counts = OrderedDict((d, 0) for d in range(23))
+
+  counts.update(
+    cls.get_timestamp_aggregated_scan_counts(
+      lambda dt: dt.hour,
+      queryset
+    )
+  )
+
+  context = {
+    "cls_name": cls._meta.verbose_name_plural,
+    "attr_names": ("hour of the day",),
+    "attrs_scan_count": counts,
+    "datetime_range_form": datetime_range_form,
+  }
+
+  return render(request, 'scan_count_1_attr.html', context)
+
+def month_of_the_year_scan_count(request, cls):
+  datetime_range_form, queryset = _get_form_and_queryset(request, cls)
+
+  # ensure every month of the year is present and in correct order:
+  counts = OrderedDict((d, 0) for d in calendar.month_name[1:])
+
+  import pdb
+  pdb.set_trace()
+
+  counts.update(
+    cls.get_timestamp_aggregated_scan_counts(
+      lambda dt: dt.strftime("%B"),
+      queryset
+    )
+  )
+
+  context = {
+    "cls_name": cls._meta.verbose_name_plural,
+    "attr_names": ("month of the year",),
     "attrs_scan_count": counts,
     "datetime_range_form": datetime_range_form,
   }

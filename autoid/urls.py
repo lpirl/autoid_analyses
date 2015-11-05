@@ -32,9 +32,21 @@ def generic_analyses_patterns(scan_cls):
       kwargs={"cls": scan_cls, "attr_name": "tag"}
     ),
     url(
-      r'^scan-count-per-weekday/$',
-      views.scan_count_per_weekday,
-      name="%s scan-count-per-weekday" % cls_name,
+      r'^scan-count-per-hour-of-the-day/$',
+      views.hour_of_the_day_scan_count,
+      name="%s scan-count-per-hour-of-the-day" % cls_name,
+      kwargs={"cls": scan_cls}
+    ),
+    url(
+      r'^scan-count-per-day-of-the-week/$',
+      views.day_of_the_week_scan_count,
+      name="%s scan-count-per-day-of-the-week" % cls_name,
+      kwargs={"cls": scan_cls}
+    ),
+    url(
+      r'^scan-count-per-month-of-the-year/$',
+      views.month_of_the_year_scan_count,
+      name="%s scan-count-per-month-of-the-year" % cls_name,
       kwargs={"cls": scan_cls}
     ),
   ]))

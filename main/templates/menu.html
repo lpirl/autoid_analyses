@@ -39,13 +39,23 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'RCCarScan scan-count-per-weekday' %}">
-                counts per weekday
+              <a href="{% url 'RCCarScan scan-intervals' %}">
+                scan intervals
               </a>
             </li>
             <li>
-              <a href="{% url 'RCCarScan scan-intervals' %}">
-                scan intervals
+              <a href="{% url 'RCCarScan scan-count-per-hour-of-the-day' %}">
+                counts per hour of the day
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'RCCarScan scan-count-per-day-of-the-week' %}">
+                counts per day of the week
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'RCCarScan scan-count-per-month-of-the-year' %}">
+                counts per month of the year
               </a>
             </li>
             {% comment %}
