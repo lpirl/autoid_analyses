@@ -131,9 +131,6 @@ def month_of_the_year_scan_count(request, cls):
   # ensure every month of the year is present and in correct order:
   counts = OrderedDict((d, 0) for d in calendar.month_name[1:])
 
-  import pdb
-  pdb.set_trace()
-
   counts.update(
     cls.get_timestamp_aggregated_scan_counts(
       lambda dt: dt.strftime("%B"),
