@@ -118,10 +118,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
-if ON_HEROKU:
-  STATICFILES_DIRS = (
-      os.path.join(BASE_DIR, 'static'),
-  )
 
 # This is crucial. It causes objects created for import previews
 # (that might not get actually imported) to be removed properly.
