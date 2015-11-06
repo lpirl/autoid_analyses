@@ -138,7 +138,7 @@ def day_of_the_week_scan_count(request, cls):
 
   context = {
     "cls_name": cls._meta.verbose_name_plural,
-    "attr_names": ("weekday",),
+    "attr_names": ("day of the week",),
     "attrs_scan_count": counts,
     "datetime_range_form": datetime_range_form,
   }
