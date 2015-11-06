@@ -4,6 +4,10 @@ from django.utils.text import slugify
 from main import views, admin, models
 
 def generic_analyses_patterns(scan_cls):
+  """
+  Returns URL patterns to all generic analyses for the specified
+  ``scan_cls``.
+  """
   cls_name = scan_cls.__name__
   slug = slugify(scan_cls._meta.verbose_name_plural)
   return url(r'^%s/' % slug, include([

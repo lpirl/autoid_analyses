@@ -13,8 +13,8 @@ from main.utils import (getattrs, values_to_hierarchical_dict,
 
 class AbstractRFIDComponent(models.Model):
   """
-  Represents a physical component involved in RFID scanning
-  (i.e. scanner or tag).
+  Digital representation of a physical RFID component involved in
+  scanning (i.e. scanner or tag).
   """
 
   class Meta:
@@ -32,19 +32,20 @@ class AbstractRFIDComponent(models.Model):
 
 class Tag(AbstractRFIDComponent):
   """
-  Represents a physical RFID tag.
+  Digital representation of a physical RFID tag.
   """
   pass
 
 class Scanner(AbstractRFIDComponent):
   """
-  Represents a physical RFID scanner.
+  Digital representation of a physical RFID scanner.
   """
   pass
 
 class AbstractScan(models.Model):
   """
-  Represents a scan, i.e. a tag at a possibly known scanner.
+  Represents a scan, i.e. a tag that is read at a specific time by a
+  (possibly known) scanner.
   """
 
   class Meta:
@@ -56,6 +57,10 @@ class AbstractScan(models.Model):
   scanner = models.ForeignKey("Scanner", blank=True, null=True)
 
   def __unicode__(self):
+    """
+    Assembles a human readable name featuring the scan time and the
+    scanned tag.
+    """
     out = "%s at %s: %s" % (self.__class__.__name__, self.timestamp,
                                     self.tag)
     if self.scanner:
@@ -73,7 +78,7 @@ class AbstractScan(models.Model):
     per attribute name. Each leaf is a tuple with the count of the
     particular combination of attributes.
 
-    Example:
+    Example::
 
       {
         <Tag: thriller>: {
@@ -139,11 +144,11 @@ class AbstractScan(models.Model):
     found under ``attr_name``. Results might be optionally limited using
     ``queryset``.
 
-    Returns a dict with the related object as key and a list of tuples
-    as value. The tuples are filled with the timestamp and the
+    Returns a dict with the related objects as keys and a list of tuples
+    as value each. The tuples are filled with the timestamp and the
     ``timedelta`` to the previous scan.
 
-    Example:
+    Example::
 
       {
         <Tag: thriller>: [
@@ -186,22 +191,23 @@ class AbstractScan(models.Model):
     """
     Calculates the total count per aggregate for all scans.
     ``aggregation_criterion_func`` is invoked with a datetime object and
-    its return value is used to determine which aggregate count increment.
+    its return value is used to determine which aggregate count to
+    increment.
     Results might be optionally limited using ``queryset``.
 
     Returns a dict, mapping the aggregates (return values of
-    ``aggregation_criterion_func``) to their corresponding scan counts.
+    ``aggregation_criterion_func``) to their corresponding scan count.
 
-    Example result, count per day of month::
+    Example result for ``aggregation_criterion_func=lambda dt: dt.hour``::
 
       {
         1: 2,
         2: 43,
         3: 12,
         …
-        29: 4,
-        30: 78,
-        31: 33,
+        21: 4,
+        22: 78,
+        23: 33,
       },
     """
     queryset = queryset or cls.objects
@@ -213,13 +219,38 @@ class AbstractScan(models.Model):
     return {k: count(k) for k in set(criteria)}
 
 class RCCarScan(AbstractScan):
-  pass
+  """
+  Represents an RC car crossing the finish line (i.e. being scanned
+  at a specific point in the course).
+
+  The associated ``tag`` relates to a specific RC car.
+  The associated ``scanner`` might be specified as a specific measuring
+  point in the course.
+  """
 
 class ActivityAreaScan(AbstractScan):
-  pass
+  """
+  Represents toys scanned in a activity area.
+
+  The associated ``tag`` relates to a specific toy,
+  whereas the associated ``scanner`` relates to a specific area.
+  """
 
 class VideoScan(AbstractScan):
-  pass
+  """
+  Represents a tag that was scanned to play the corresponding video.
+
+  The associated ``tag`` relates to the specific video that is played
+  when this tag is scanned,
+  whereas the associated ``scanner`` might be specified to save the
+  workstation where this video was played.
+  """
 
 class WorkstationLoginScan(AbstractScan):
-  pass
+  """
+  Represents a login at a workstation using a tag.
+
+  The associated ``tag`` relates to the person that logged in,
+  whereas the associated ``scanner`` relates to the  workstation where
+  the login took place.
+  """

@@ -7,16 +7,30 @@ from django.core.management.base import BaseCommand, CommandError
 from main import models
 
 class Command(BaseCommand):
+  """
+  A management command to generate CSV data.
+  That data can be stored in a file.
+  With that file, in turn, a test database can be populated, as well can
+  the import feature be tested.
+  """
+
   help = 'Prints a random CSV of scans.'
 
   @classmethod
   def get_random_generators(cls):
+    """
+    Returns a dictionary mapping string names of the available random
+    generators to their corresponding class method.
+    """
     return {
       "uniform": cls._uniform_random,
       "gauss": cls._gauss_like_random,
     }
 
   def add_arguments(self, parser):
+    """
+    Called by Django to enable the Command to add command line arguments.
+    """
 
     random_generator_names = self.get_random_generators().keys()
 
@@ -43,6 +57,10 @@ class Command(BaseCommand):
 
   @classmethod
   def _gauss_like_random(cls, lowest, highest):
+    """
+    Returns a Gauss-like distributed random float within
+    [``lowest``, ``highest``] (inclusively).
+    """
     random_multiplier = gauss(3, 1)/6
     range_size = highest - lowest
     unlimited = lowest + range_size * random_multiplier
@@ -51,21 +69,37 @@ class Command(BaseCommand):
 
   @classmethod
   def _uniform_random(cls, lowest, highest):
+    """
+    Retruns a uniformly distributed random float within
+    [``lowest``, ``highest``] (inclusively).
+    """
     return uniform(lowest, highest)
 
   @classmethod
   def _rand_with_dist(cls, lowest, highest, random_generator_name):
+    """
+    Returns a random float using the random number generator specified in
+    ``random_generator_name`` within [``lowest``, ``highest``] (inclusively).
+    """
     random_generators = cls.get_random_generators()
     random_generator = random_generators[random_generator_name]
     return random_generator(lowest, highest)
 
   @classmethod
   def _randint_with_dist(cls, lowest, highest, random_generator_name):
+    """
+    Returns a random int using the random number generator specified in
+    ``random_generator_name`` within [``lowest``, ``highest``] (inclusively).
+    """
     random = cls._rand_with_dist(lowest, highest, random_generator_name)
     return int(round(random))
 
   @classmethod
   def _choice_with_dist(cls, items, random_generator_name):
+    """
+    Choses a random element from ``items`` using the random number
+    generator specified in ``random_generator_name``.
+    """
     lowest = 0
     highest = len(items)-1
     index = cls._randint_with_dist(lowest, highest, random_generator_name)
@@ -73,10 +107,19 @@ class Command(BaseCommand):
 
   @staticmethod
   def get_random_components(component_cls, size):
+    """
+    Returns ``size`` new, unsaved objects of the specified
+    ``component_cls``, each with a random PK.
+    """
     return [component_cls(pk=str(uuid4())) for _ in range(size)]
 
   def handle(self, *args, **options):
+    """
+    Called by Django when the command is invoked.
+    This is where the main work is done.
+    """
 
+    # plausibility checks for the specified options
     if options['scans'] < 1:
       raise CommandError('Number of scans to generate must be at least 1.')
     if options['tags'] < 1:
@@ -92,6 +135,7 @@ class Command(BaseCommand):
     else:
       scanners = [None]
 
+    # shortcuts
     hours_distribution = options["hours_dist"]
     tags_distribution = options["tags_dist"]
     scanners_distribution = options["scanners_dist"]
@@ -99,6 +143,8 @@ class Command(BaseCommand):
     now = datetime.now()
     seconds = options['hours'] * 60 * 60
     self.stdout.write("timestamp,tag,scanner")
+
+    # within this loop, the random scans are generated and printed
     for _ in range(options["scans"]):
       delta_secs = self._rand_with_dist(0, seconds, hours_distribution)
       time = now - timedelta(0, delta_secs)

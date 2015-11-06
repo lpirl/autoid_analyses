@@ -7,6 +7,11 @@ class HierarchicalDictMixin(object):
 
   @staticmethod
   def _check_if_dict(obj):
+    """
+    Internal helper for traversing down a hierarchy.
+    Used to raise an exception when traversing deeper than the hierarchy
+    actually is.
+    """
     assert issubclass(type(obj), dict), \
         "Cannot traverse down hierarchical dict: %s is not a dict" % obj
 
@@ -14,6 +19,7 @@ class HierarchicalDictMixin(object):
     """
     Traverses down the hierarchy specified by ``keys_list`` and sets
     ``item``.
+    Missing hierarchy levels will be created.
     """
     tmp = self
     for key in keys_list[:-1]:
@@ -26,6 +32,7 @@ class HierarchicalDictMixin(object):
     Traverses down the hierarchy specified by ``keys_list`` and returns
     last seed value.
     Uses ``default`` as default for getting values.
+    Missing hierarchy levels will raise an exception.
     """
     tmp = self
     for key in keys_list:
@@ -35,13 +42,15 @@ class HierarchicalDictMixin(object):
 
 class HierarchicalDict(dict, HierarchicalDictMixin):
   """
-  Like ``dict``,  for traversing down a hierarchy of dictionaries.
+  Like ``dict``, but with helpers for getting/setting values in
+  hierarchically nested dictionaries.
   """
   pass
 
 class HierarchicalOrderedDict(OrderedDict, HierarchicalDictMixin):
   """
-  Like ``OrderedDict``,  for traversing down a hierarchy of dictionaries.
+  Like ``OrderedDict``, but with helpers for getting/setting values in
+  hierarchically nested dictionaries.
   """
   pass
 
@@ -53,19 +62,17 @@ def getattrs(objects, attr_name):
 
 def values_to_hierarchical_dict(dicts, attr_names):
   """
-  TODO: move to HierarchicalDictMixin
-
-  Transforms a list of ``dicts`` (as returned by ``QuerySet.values()``)
+  Transforms (a list of) ``dicts`` (as returned by ``QuerySet.values()``)
   to a hierarchical dict, e.g. for easier lookup.
   The resulting hierarchy is determined by ``attr_names``: for every
   attribute name in there, a level hierarchy is created. E.g.:
 
-    d = [
-      {"foo": 11, "bar": 22, "x": 1, "y": 2},
-      {"foo": 55, "bar": 66, "x": 1, "y": 5},
-    ]
-    values_to_hierarchical_dict(d, ("x", "y"))
-    >>> {
+    >>> d = [
+    ...   {"foo": 11, "bar": 22, "x": 1, "y": 2},
+    ...   {"foo": 55, "bar": 66, "x": 1, "y": 5},
+    ... ]
+    >>> values_to_hierarchical_dict(d, ("x", "y"))
+    {
       1: {
         2: {"foo": 11, "bar": 22},
         5: {"foo": 55, "bar": 66},
@@ -88,5 +95,8 @@ def values_to_hierarchical_dict(dicts, attr_names):
   return out
 
 def get_friendly_name_for_attr(cls, attr_name):
+  """
+  Returns the friendly name for the attribute ``attr_name`` of ``cls``.
+  """
   field = cls._meta.get_field(attr_name)
   return field.related_model().__class__._meta.verbose_name
